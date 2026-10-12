@@ -1,8 +1,42 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+  --background: #f4f1eb;
+  --foreground: #16221e;
+  --surface: #fffdf8;
+  --surface-muted: #ece8df;
+  --surface-sidebar: #f0eee7;
+  --surface-overlay: rgba(255, 253, 248, 0.82);
+  --surface-composer: rgba(255, 253, 248, 0.96);
+  --surface-input: #ffffff;
+  --surface-message: #f5f2ec;
+  --border: #d9d3c8;
+  --border-subtle: rgba(22, 34, 30, 0.09);
+  --border-strong: #b9b2a7;
+  --accent: #1f6a5a;
+  --accent-strong: #155144;
+  --accent-soft: #dcece6;
+  --accent-border: rgba(31, 106, 90, 0.2);
+  --on-accent: #ffffff;
+  --highlight: #df8b4d;
+  --highlight-soft: rgba(223, 139, 77, 0.09);
+  --highlight-label: #9a552b;
+  --highlight-text: #5d4b3d;
+  --muted: #69746f;
+  --text-secondary: #4f5c57;
+  --text-tertiary: #7a827e;
+  --text-subtle: #858d88;
+  --text-strong: #35413c;
+  --placeholder: #979d99;
+  --persona-avatar: #dce7df;
+  --status: #42a477;
+  --status-ring: rgba(66, 164, 119, 0.12);
+  --ambient-glow: rgba(223, 139, 77, 0.12);
+  --focus-ring: rgba(31, 106, 90, 0.28);
+  --brand-shadow: rgba(21, 81, 68, 0.2);
+  --panel-shadow: rgba(59, 52, 43, 0.12);
+  --control-shadow: rgba(42, 46, 43, 0.07);
 }
 
 @theme inline {
@@ -12,15 +46,42 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  background: var(--background);
 }
 
 body {
-  background: var(--background);
+  margin: 0;
+  background:
+    radial-gradient(circle at 8% 0%, var(--ambient-glow), transparent 28rem),
+    var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+button,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    transition: none;
+  }
 }

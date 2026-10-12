@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
-:root {
+:root,
+[data-theme="light"] {
   color-scheme: light;
   --background: #f4f1eb;
   --foreground: #16221e;
@@ -37,6 +38,45 @@
   --brand-shadow: rgba(21, 81, 68, 0.2);
   --panel-shadow: rgba(59, 52, 43, 0.12);
   --control-shadow: rgba(42, 46, 43, 0.07);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --background: #101613;
+  --foreground: #edf3ef;
+  --surface: #18201c;
+  --surface-muted: #252e29;
+  --surface-sidebar: #151c18;
+  --surface-overlay: rgba(31, 41, 36, 0.88);
+  --surface-composer: rgba(24, 32, 28, 0.96);
+  --surface-input: #202a25;
+  --surface-message: #252e29;
+  --border: #344039;
+  --border-subtle: rgba(237, 243, 239, 0.1);
+  --border-strong: #526057;
+  --accent: #66b8a3;
+  --accent-strong: #87cdb9;
+  --accent-soft: #263f37;
+  --accent-border: rgba(102, 184, 163, 0.28);
+  --on-accent: #0c211a;
+  --highlight: #e7a16d;
+  --highlight-soft: rgba(231, 161, 109, 0.12);
+  --highlight-label: #f0b78e;
+  --highlight-text: #e9d0bd;
+  --muted: #a4afa9;
+  --text-secondary: #c0cac4;
+  --text-tertiary: #9ca7a1;
+  --text-subtle: #8f9a94;
+  --text-strong: #dce5df;
+  --placeholder: #89958e;
+  --persona-avatar: #29473d;
+  --status: #68c799;
+  --status-ring: rgba(104, 199, 153, 0.14);
+  --ambient-glow: rgba(231, 161, 109, 0.08);
+  --focus-ring: rgba(102, 184, 163, 0.38);
+  --brand-shadow: rgba(0, 0, 0, 0.28);
+  --panel-shadow: rgba(0, 0, 0, 0.28);
+  --control-shadow: rgba(0, 0, 0, 0.2);
 }
 
 @theme inline {

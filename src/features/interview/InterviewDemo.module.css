@@ -44,6 +44,12 @@
   font-size: 0.78rem;
 }
 
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .prototypeBadge {
   padding: 7px 12px;
   border: 1px solid var(--accent-border);

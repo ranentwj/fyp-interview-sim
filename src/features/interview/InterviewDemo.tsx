@@ -1,5 +1,6 @@
 "use client";
 
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import {
   demoPersona,
@@ -94,7 +95,10 @@ export function InterviewDemo() {
             <div className={styles.brandCaption}>User interview practice</div>
           </div>
         </div>
-        <div className={styles.prototypeBadge}>Frontend prototype</div>
+        <div className={styles.headerActions}>
+          <ThemeToggle />
+          <div className={styles.prototypeBadge}>Frontend prototype</div>
+        </div>
       </header>
 
       <section className={styles.workspace} aria-label="Interview practice workspace">

@@ -15,11 +15,16 @@ export function InterviewDemo() {
   const [messages, setMessages] = useState<DemoMessage[]>(initialMessages);
   const [question, setQuestion] = useState("");
   const [isResponding, setIsResponding] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesRef = useRef<HTMLDivElement>(null);
   const pendingReplyRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const messagesContainer = messagesRef.current;
+
+    messagesContainer?.scrollTo({
+      top: messagesContainer.scrollHeight,
+      behavior: "smooth",
+    });
   }, [messages, isResponding]);
 
   useEffect(() => {
@@ -170,7 +175,12 @@ export function InterviewDemo() {
             </button>
           </header>
 
-          <div className={styles.messages} aria-live="polite" aria-busy={isResponding}>
+          <div
+            ref={messagesRef}
+            className={styles.messages}
+            aria-live="polite"
+            aria-busy={isResponding}
+          >
             {messages.map((message) => {
               const isLearner = message.speaker === "learner";
 
@@ -211,7 +221,6 @@ export function InterviewDemo() {
                 </div>
               </article>
             )}
-            <div ref={messagesEndRef} />
           </div>
 
           <div className={styles.composerArea}>

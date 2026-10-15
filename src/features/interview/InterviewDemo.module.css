@@ -82,6 +82,7 @@
   border-right: 1px solid var(--border);
   background: var(--surface-sidebar);
   overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .eyebrow {
@@ -232,8 +233,10 @@
 
 .interviewPanel {
   min-width: 0;
+  min-height: 0;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto;
+  overflow: hidden;
   background: var(--surface);
 }
 
@@ -286,7 +289,10 @@
 }
 
 .messages {
+  min-height: 0;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
   padding: 34px clamp(24px, 5vw, 68px);
   scroll-behavior: smooth;
 }
@@ -485,6 +491,7 @@
 
   .interviewPanel {
     min-height: 620px;
+    overflow: visible;
   }
 }
 

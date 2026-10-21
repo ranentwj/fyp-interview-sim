@@ -402,6 +402,14 @@
   text-align: center;
 }
 
+.responseError {
+  margin: 0 0 10px;
+  color: var(--highlight-label);
+  font-size: 0.76rem;
+  font-weight: 650;
+  text-align: center;
+}
+
 .composer {
   display: flex;
   align-items: flex-end;

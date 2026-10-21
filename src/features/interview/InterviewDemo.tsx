@@ -2,21 +2,22 @@
 
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
-import {
-  demoPersona,
-  demoScenario,
-  getDemoResponse,
-  initialMessages,
-  type DemoMessage,
-} from "./demo-data";
+import { demoPersona, demoScenario, initialMessages } from "./demo-data";
+import type {
+  InterviewErrorResponse,
+  InterviewMessage,
+  InterviewReplyRequest,
+  InterviewReplyResponse,
+} from "./interview-types";
 import styles from "./InterviewDemo.module.css";
 
 export function InterviewDemo() {
-  const [messages, setMessages] = useState<DemoMessage[]>(initialMessages);
+  const [messages, setMessages] = useState<InterviewMessage[]>(initialMessages);
   const [question, setQuestion] = useState("");
   const [isResponding, setIsResponding] = useState(false);
+  const [responseError, setResponseError] = useState<string | null>(null);
   const messagesRef = useRef<HTMLDivElement>(null);
-  const pendingReplyRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pendingRequestRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     const messagesContainer = messagesRef.current;
@@ -29,40 +30,71 @@ export function InterviewDemo() {
 
   useEffect(() => {
     return () => {
-      if (pendingReplyRef.current) {
-        clearTimeout(pendingReplyRef.current);
-      }
+      pendingRequestRef.current?.abort();
     };
   }, []);
 
-  function sendQuestion() {
+  async function sendQuestion() {
     const trimmedQuestion = question.trim();
 
-    if (!trimmedQuestion || isResponding) {
+    if (!trimmedQuestion || isResponding || pendingRequestRef.current) {
       return;
     }
 
-    const learnerMessage: DemoMessage = {
+    const learnerMessage: InterviewMessage = {
       id: `learner-${Date.now()}`,
       speaker: "learner",
       text: trimmedQuestion,
     };
+    const updatedMessages = [...messages, learnerMessage];
+    const requestBody: InterviewReplyRequest = {
+      scenarioId: demoScenario.id,
+      messages: updatedMessages,
+    };
+    const requestController = new AbortController();
 
-    setMessages((currentMessages) => [...currentMessages, learnerMessage]);
+    pendingRequestRef.current = requestController;
+    setMessages(updatedMessages);
     setQuestion("");
+    setResponseError(null);
     setIsResponding(true);
 
-    pendingReplyRef.current = setTimeout(() => {
-      const personaMessage: DemoMessage = {
-        id: `persona-${Date.now()}`,
-        speaker: "persona",
-        text: getDemoResponse(trimmedQuestion),
-      };
+    try {
+      const response = await fetch("/api/interview/respond", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requestBody),
+        signal: requestController.signal,
+      });
 
-      setMessages((currentMessages) => [...currentMessages, personaMessage]);
-      setIsResponding(false);
-      pendingReplyRef.current = null;
-    }, 650);
+      if (!response.ok) {
+        const errorBody = (await response.json().catch(() => null)) as InterviewErrorResponse | null;
+        throw new Error(errorBody?.error ?? "The virtual user could not respond.");
+      }
+
+      const responseBody = (await response.json()) as InterviewReplyResponse;
+
+      if (pendingRequestRef.current !== requestController) {
+        return;
+      }
+
+      setMessages((currentMessages) => [...currentMessages, responseBody.reply]);
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") {
+        return;
+      }
+
+      setResponseError(
+        error instanceof Error
+          ? error.message
+          : "The virtual user could not respond. Please try again.",
+      );
+    } finally {
+      if (pendingRequestRef.current === requestController) {
+        pendingRequestRef.current = null;
+        setIsResponding(false);
+      }
+    }
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -78,13 +110,12 @@ export function InterviewDemo() {
   }
 
   function resetInterview() {
-    if (pendingReplyRef.current) {
-      clearTimeout(pendingReplyRef.current);
-      pendingReplyRef.current = null;
-    }
+    pendingRequestRef.current?.abort();
+    pendingRequestRef.current = null;
 
     setMessages(initialMessages);
     setQuestion("");
+    setResponseError(null);
     setIsResponding(false);
   }
 
@@ -102,7 +133,7 @@ export function InterviewDemo() {
         </div>
         <div className={styles.headerActions}>
           <ThemeToggle />
-          <div className={styles.prototypeBadge}>Frontend prototype</div>
+          <div className={styles.prototypeBadge}>Mock chatbot</div>
         </div>
       </header>
 
@@ -227,6 +258,11 @@ export function InterviewDemo() {
             <p className={styles.futureCoach}>
               Interview coaching and safety guidance will be added in a later milestone.
             </p>
+            {responseError && (
+              <p className={styles.responseError} role="alert">
+                {responseError}
+              </p>
+            )}
             <form className={styles.composer} onSubmit={handleSubmit}>
               <textarea
                 aria-label="Interview question"

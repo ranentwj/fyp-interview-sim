@@ -26,6 +26,11 @@
   transform: translateY(-3px);
 }
 
+.selectedCard {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--focus-ring), 0 18px 38px var(--panel-shadow);
+}
+
 .portrait {
   z-index: -1;
   object-fit: cover;
@@ -119,9 +124,248 @@
   mask-image: linear-gradient(to bottom, transparent 3%, black 58%);
 }
 
+.selectedLabel {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  border-radius: 999px;
+  padding: 7px 10px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+  font-weight: 750;
+}
+
+.backLink svg,
+.closeButton svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.footerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 58px;
+  margin-top: 18px;
+}
+
+.backLink {
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+}
+
+.selectionMessage {
+  max-width: 560px;
+  margin: 0;
+  color: var(--accent-strong);
+  font-size: 0.76rem;
+  line-height: 1.5;
+  text-align: right;
+}
+
+.dialog {
+  width: min(880px, calc(100% - 32px));
+  max-height: min(760px, calc(100vh - 32px));
+  overflow: auto;
+  border: 1px solid var(--border-subtle);
+  border-radius: 24px;
+  padding: 0;
+  background: var(--surface);
+  color: var(--foreground);
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.35);
+}
+
+.dialog::backdrop {
+  background: rgba(8, 13, 11, 0.62);
+  backdrop-filter: blur(5px);
+}
+
+.dialogBody {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(250px, 0.78fr) minmax(0, 1.22fr);
+  min-height: 540px;
+}
+
+.dialogPortrait {
+  position: relative;
+  min-height: 100%;
+  background: var(--surface-muted);
+}
+
+.dialogPortrait img {
+  object-fit: cover;
+}
+
+.dialogContent {
+  padding: 42px 38px 34px;
+}
+
+.closeButton {
+  position: absolute;
+  z-index: 2;
+  top: 15px;
+  right: 15px;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface-overlay);
+  color: var(--text-secondary);
+}
+
+.dialogEyebrow {
+  margin: 0 0 6px;
+  color: var(--accent-strong);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.dialogContent h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  letter-spacing: -0.04em;
+}
+
+.dialogRole {
+  margin: 7px 0 22px;
+  color: var(--text-secondary);
+  font-size: 0.86rem;
+}
+
+.details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0 0 24px;
+}
+
+.details div {
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: var(--surface-muted);
+}
+
+.details dt {
+  color: var(--muted);
+  font-size: 0.64rem;
+  font-weight: 750;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.details dd {
+  margin: 3px 0 0;
+  color: var(--text-strong);
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.detailSection h3 {
+  margin: 0 0 5px;
+  color: var(--text-strong);
+  font-size: 0.78rem;
+}
+
+.detailSection p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  line-height: 1.58;
+}
+
+.dialogActions {
+  margin-top: 26px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.secondaryButton,
+.primaryButton {
+  min-height: 44px;
+  border-radius: 11px;
+  padding: 10px 16px;
+  font-weight: 750;
+}
+
+.secondaryButton {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-strong);
+}
+
+.primaryButton {
+  border: 1px solid transparent;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
 @media (max-width: 900px) {
   .roster {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 680px) {
+  .roster {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    min-height: 420px;
+  }
+
+  .footerRow {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .selectionMessage {
+    text-align: left;
+  }
+
+  .dialogBody {
+    grid-template-columns: 1fr;
+  }
+
+  .dialogPortrait {
+    min-height: 280px;
+  }
+
+  .dialogContent {
+    padding: 30px 22px 24px;
+  }
+
+  .details {
+    grid-template-columns: 1fr;
+  }
+
+  .dialogActions {
+    align-items: stretch;
+    flex-direction: column-reverse;
   }
 }
 
@@ -142,12 +386,4 @@
   }
 }
 
-@media (max-width: 680px) {
-  .roster {
-    grid-template-columns: 1fr;
-  }
 
-  .card {
-    min-height: 420px;
-  }
-}

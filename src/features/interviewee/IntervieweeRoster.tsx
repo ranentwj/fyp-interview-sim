@@ -84,6 +84,28 @@ export function IntervieweeRoster() {
         })}
       </div>
 
+      <aside className={styles.customCard} aria-labelledby="custom-interviewee-title">
+        <span className={styles.customIcon} aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 20v-8m-4 4h8M7.5 10a4.5 4.5 0 1 1 9 0" />
+          </svg>
+        </span>
+        <div>
+          <p className={styles.customEyebrow}>Need someone specific?</p>
+          <h2 id="custom-interviewee-title">Create your own interviewee</h2>
+          <p>
+            Define a different age, background, occupation, and perspective for your
+            practice interview.
+          </p>
+        </div>
+        <Link className={styles.customLink} href="/setup/interviewee/create">
+          Create your own
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </Link>
+      </aside>
+
       <div className={styles.footerRow}>
         <Link className={styles.backLink} href="/setup/topic">
           <svg aria-hidden="true" viewBox="0 0 24 24">

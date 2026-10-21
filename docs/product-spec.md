@@ -551,6 +551,23 @@ This slice is complete when:
 
 The interviewee roster, custom interviewee creation, persona dialogs, interview workspace, backend, and language-model connection are deliberately excluded from this slice.
 
+### Second frontend implementation slice
+
+**Status: Implemented on 22 October 2026**
+
+The second implementation slice adds the prepared-interviewee experience:
+
+- The Topic page now continues to `/setup/interviewee`.
+- The roster presents six fictional interviewees from varied ages, backgrounds, and occupations.
+- Each card keeps name, age, and occupation visible and reveals a short background through a gradual frosted overlay on hover or keyboard focus.
+- Selecting a card opens an accessible detail dialog containing public persona information and explicit Back and Continue actions.
+- The selected interviewee is retained while navigating within setup.
+- A prominent **Create your own** action opens the separate `/setup/interviewee/create` route.
+- The custom-interviewee route is intentionally a placeholder until its fields and review behaviour are agreed.
+- Personality, hidden needs, and interview behaviour are not exposed by the roster or detail dialog.
+
+The interview workspace, custom-interviewee form, generation behaviour, and persistent session model remain outside this slice.
+
 ## Naming conventions
 
 **Status: Proposed for approval**
@@ -911,4 +928,5 @@ Record major product decisions here or move them into dedicated decision records
 - Confirmed the exact progress-indicator behaviour and the scope and completion criteria of the first frontend implementation slice.
 - Selected the chat-preview Welcome design for the initial frontend; retained the avatar-led and three-step concepts as later design options.
 - Implemented the first frontend slice: shared frame, Welcome page, Topic page, navigation, setup progress, retained form values, themes, and responsive foundations.
+- Implemented the prepared-interviewee roster, local fictional portrait assets, frosted card details, public-persona review dialog, selection state, and custom-interviewee placeholder route.
 

@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { type ChangeEvent, type FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
+import { type ChangeEvent, type FormEvent } from "react";
 import { useSetupState, type TopicDraft } from "@/features/setup/SetupStateProvider";
 import styles from "./TopicForm.module.css";
 
@@ -9,7 +10,7 @@ type TopicField = keyof TopicDraft;
 
 export function TopicForm() {
   const { topicDraft, setTopicDraft } = useSetupState();
-  const [statusMessage, setStatusMessage] = useState("");
+  const router = useRouter();
   const canContinue = topicDraft.topic.trim().length > 0;
 
   function updateField(
@@ -20,7 +21,6 @@ export function TopicForm() {
       ...topicDraft,
       [field]: event.target.value,
     });
-    setStatusMessage("");
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -30,9 +30,7 @@ export function TopicForm() {
       return;
     }
 
-    setStatusMessage(
-      "Your topic has been kept. Interviewee selection will be added in the next frontend slice.",
-    );
+    router.push("/setup/interviewee");
   }
 
   return (
@@ -90,10 +88,6 @@ export function TopicForm() {
           value={topicDraft.context}
         />
       </div>
-
-      <p className={styles.status} aria-live="polite">
-        {statusMessage}
-      </p>
 
       <div className={styles.actions}>
         <Link className={styles.backButton} href="/">

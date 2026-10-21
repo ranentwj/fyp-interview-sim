@@ -63,14 +63,6 @@
   outline: none;
 }
 
-.status {
-  min-height: 22px;
-  margin: -4px 0 0;
-  color: var(--accent-strong);
-  font-size: 0.8rem;
-  line-height: 1.5;
-}
-
 .actions {
   display: flex;
   align-items: center;

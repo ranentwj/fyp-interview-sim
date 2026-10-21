@@ -1,0 +1,94 @@
+.progress {
+  width: min(720px, 100%);
+  margin: 0 auto 28px;
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--text-tertiary);
+  font-size: 0.8rem;
+  font-weight: 650;
+}
+
+.step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  width: calc(100% - 82px);
+  height: 1px;
+  left: calc(50% + 41px);
+  background: var(--border);
+}
+
+.marker {
+  position: relative;
+  z-index: 1;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text-tertiary);
+  font-size: 0.72rem;
+}
+
+.label {
+  position: relative;
+  z-index: 1;
+  padding: 0 6px;
+  background: var(--background);
+}
+
+.current {
+  color: var(--foreground);
+}
+
+.current .marker {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+  box-shadow: 0 0 0 5px var(--focus-ring);
+}
+
+.complete {
+  color: var(--accent-strong);
+}
+
+.complete .marker {
+  border-color: var(--accent-border);
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+@media (max-width: 560px) {
+  .step {
+    flex-direction: column;
+    gap: 5px;
+    font-size: 0.7rem;
+  }
+
+  .label {
+    padding: 0 3px;
+  }
+
+  .step:not(:last-child)::after {
+    width: calc(100% - 46px);
+    left: calc(50% + 23px);
+    top: 14px;
+  }
+}

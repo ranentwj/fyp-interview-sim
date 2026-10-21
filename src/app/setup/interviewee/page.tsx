@@ -11,6 +11,17 @@ export default function IntervieweePage() {
   return (
     <main className={styles.page}>
       <SetupProgress currentStep="interviewee" />
+
+      <section className={styles.introduction} aria-labelledby="interviewee-page-title">
+        <div>
+          <p className={styles.eyebrow}>Interview setup</p>
+          <h1 id="interviewee-page-title">Choose your interviewee</h1>
+        </div>
+        <p>
+          Select a prepared interviewee to review their background and communication style,
+          or create someone tailored to your research topic.
+        </p>
+      </section>
     </main>
   );
 }

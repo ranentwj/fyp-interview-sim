@@ -2,3 +2,41 @@
   min-height: calc(100vh - 138px);
   padding: clamp(32px, 6vh, 64px) 0 70px;
 }
+
+.introduction {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(320px, 0.75fr);
+  align-items: end;
+  gap: 40px;
+  margin-bottom: 28px;
+}
+
+.eyebrow {
+  margin: 0 0 9px;
+  color: var(--accent-strong);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.introduction h1 {
+  margin: 0;
+  font-size: clamp(2.15rem, 5vw, 3.5rem);
+  line-height: 1.03;
+  letter-spacing: -0.052em;
+}
+
+.introduction > p {
+  margin: 0 0 4px;
+  color: var(--text-secondary);
+  font-size: 0.86rem;
+  line-height: 1.65;
+}
+
+@media (max-width: 760px) {
+  .introduction {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+}

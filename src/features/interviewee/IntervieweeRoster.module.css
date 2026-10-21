@@ -1,0 +1,35 @@
+.roster {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.card {
+  position: relative;
+  min-height: 340px;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  background: var(--surface-muted);
+  box-shadow: 0 12px 30px var(--control-shadow);
+}
+
+.portrait {
+  object-fit: cover;
+}
+
+@media (max-width: 900px) {
+  .roster {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 680px) {
+  .roster {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    min-height: 420px;
+  }
+}

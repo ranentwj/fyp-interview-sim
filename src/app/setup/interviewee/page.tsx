@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SetupProgress } from "@/components/navigation/SetupProgress";
+import { IntervieweeRoster } from "@/features/interviewee/IntervieweeRoster";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
@@ -22,6 +23,8 @@ export default function IntervieweePage() {
           or create someone tailored to your research topic.
         </p>
       </section>
+
+      <IntervieweeRoster />
     </main>
   );
 }

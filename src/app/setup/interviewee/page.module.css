@@ -1,0 +1,4 @@
+.page {
+  min-height: calc(100vh - 138px);
+  padding: clamp(32px, 6vh, 64px) 0 70px;
+}

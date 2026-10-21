@@ -1,0 +1,107 @@
+.shell {
+  min-height: 100vh;
+  padding: 22px clamp(18px, 4vw, 56px) 40px;
+}
+
+.header {
+  width: min(1240px, 100%);
+  min-height: 58px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  color: var(--foreground);
+  text-decoration: none;
+}
+
+.brandMark {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  border-radius: 12px;
+  background: var(--accent);
+  box-shadow: 0 8px 20px var(--brand-shadow);
+}
+
+.primaryBubble,
+.secondaryBubble {
+  position: absolute;
+  display: block;
+  border: 2px solid var(--on-accent);
+}
+
+.primaryBubble {
+  width: 18px;
+  height: 14px;
+  top: 9px;
+  left: 8px;
+  border-radius: 6px;
+}
+
+.primaryBubble::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  bottom: -5px;
+  width: 5px;
+  height: 5px;
+  border-left: 2px solid var(--on-accent);
+  transform: skewY(-35deg);
+}
+
+.secondaryBubble {
+  width: 15px;
+  height: 11px;
+  right: 7px;
+  bottom: 8px;
+  border-radius: 5px;
+  background: var(--accent);
+}
+
+.brandName,
+.brandDescription {
+  display: block;
+}
+
+.brandName {
+  font-size: 1rem;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+}
+
+.brandDescription {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.page {
+  width: min(1240px, 100%);
+  margin: 18px auto 0;
+}
+
+@media (max-width: 600px) {
+  .shell {
+    padding: 16px 14px 28px;
+  }
+
+  .header {
+    gap: 12px;
+  }
+
+  .brandDescription {
+    display: none;
+  }
+
+  .page {
+    margin-top: 12px;
+  }
+}

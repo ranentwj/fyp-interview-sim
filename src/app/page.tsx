@@ -1,5 +1,5 @@
-import { InterviewDemo } from "@/features/interview/InterviewDemo";
+import { WelcomePage } from "@/features/welcome/WelcomePage";
 
 export default function Home() {
-  return <InterviewDemo />;
+  return <WelcomePage />;
 }

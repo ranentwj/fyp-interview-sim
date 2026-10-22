@@ -568,6 +568,24 @@ The second implementation slice adds the prepared-interviewee experience:
 
 The interview workspace, custom-interviewee form, generation behaviour, and persistent session model remain outside this slice.
 
+### Third frontend implementation slice
+
+**Status: Implemented on 22 October 2026**
+
+The third implementation slice adds the frontend-only custom-interviewee workflow:
+
+- `/setup/interviewee/create` now presents a dedicated custom-interviewee form instead of a placeholder.
+- The form collects the public profile fields needed for the current design: name, age, occupation or role, location, gender, ethnicity or cultural background, and a short background.
+- Name, age, occupation or role, and short background are required before the profile can be reviewed.
+- The selected topic is shown as context when one has already been entered.
+- A review state presents the completed public profile before it is selected.
+- The user can edit the details, clear the draft after confirmation, or select the custom interviewee.
+- An initials-based portrait placeholder keeps this slice independent of any future portrait-generation provider.
+- Draft details and the custom selection are retained within the browser session alongside the rest of the setup state.
+- Public profile information remains separate from future private motivations, needs, pain points, and interview behaviour.
+
+This slice does not generate a persona with AI and does not call a backend. Portrait generation, private behaviour generation, editable generation controls, the interview workspace, and the final transition into an interview remain for later milestones.
+
 ## Naming conventions
 
 **Status: Proposed for approval**
@@ -929,4 +947,5 @@ Record major product decisions here or move them into dedicated decision records
 - Selected the chat-preview Welcome design for the initial frontend; retained the avatar-led and three-step concepts as later design options.
 - Implemented the first frontend slice: shared frame, Welcome page, Topic page, navigation, setup progress, retained form values, themes, and responsive foundations.
 - Implemented the prepared-interviewee roster, local fictional portrait assets, frosted card details, public-persona review dialog, selection state, and custom-interviewee placeholder route.
+- Implemented the frontend-only custom-interviewee form, review and revision flow, confirmed reset, setup-state retention, and custom selection without introducing backend or AI generation behaviour.
 

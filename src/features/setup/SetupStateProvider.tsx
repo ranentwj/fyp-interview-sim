@@ -5,10 +5,13 @@ import {
   type ReactNode,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
-  useState,
+  useSyncExternalStore,
 } from "react";
+import {
+  emptyCustomIntervieweeDraft,
+  type CustomIntervieweeDraft,
+} from "@/features/interviewee/interviewee-types";
 
 export type TopicDraft = {
   topic: string;
@@ -27,9 +30,41 @@ const setupStorageKey = "rgs-setup-draft";
 type StoredSetupState = {
   topicDraft: TopicDraft;
   selectedIntervieweeId: string | null;
+  customIntervieweeDraft: CustomIntervieweeDraft;
 };
 
-function isStoredSetupState(value: unknown): value is StoredSetupState {
+type StoredSetupSnapshot = Omit<StoredSetupState, "customIntervieweeDraft"> & {
+  customIntervieweeDraft?: CustomIntervieweeDraft;
+};
+
+const emptyStoredSetupState: StoredSetupState = {
+  topicDraft: emptyTopicDraft,
+  selectedIntervieweeId: null,
+  customIntervieweeDraft: emptyCustomIntervieweeDraft,
+};
+const emptySetupSnapshot = JSON.stringify(emptyStoredSetupState);
+const setupListeners = new Set<() => void>();
+let memorySetupSnapshot = emptySetupSnapshot;
+
+function isCustomIntervieweeDraft(value: unknown): value is CustomIntervieweeDraft {
+  if (!value || typeof value !== "object") {
+    return false;
+  }
+
+  const draft = value as Partial<CustomIntervieweeDraft>;
+
+  return (
+    typeof draft.name === "string" &&
+    typeof draft.age === "string" &&
+    typeof draft.gender === "string" &&
+    typeof draft.ethnicity === "string" &&
+    typeof draft.occupation === "string" &&
+    typeof draft.location === "string" &&
+    typeof draft.background === "string"
+  );
+}
+
+function isStoredSetupState(value: unknown): value is StoredSetupSnapshot {
   if (!value || typeof value !== "object") {
     return false;
   }
@@ -47,28 +82,53 @@ function isStoredSetupState(value: unknown): value is StoredSetupState {
   );
 }
 
-function readStoredSetupState(): StoredSetupState {
-  const emptyState: StoredSetupState = {
-    topicDraft: emptyTopicDraft,
-    selectedIntervieweeId: null,
-  };
-
-  if (typeof window === "undefined") {
-    return emptyState;
-  }
-
+function parseSetupSnapshot(storedValue: string): StoredSetupState {
   try {
-    const storedValue = window.sessionStorage.getItem(setupStorageKey);
+    const storedState: unknown = JSON.parse(storedValue);
 
-    if (!storedValue) {
-      return emptyState;
+    if (!isStoredSetupState(storedState)) {
+      return emptyStoredSetupState;
     }
 
-    const storedState: unknown = JSON.parse(storedValue);
-    return isStoredSetupState(storedState) ? storedState : emptyState;
+    return {
+      topicDraft: storedState.topicDraft,
+      selectedIntervieweeId: storedState.selectedIntervieweeId,
+      customIntervieweeDraft: isCustomIntervieweeDraft(storedState.customIntervieweeDraft)
+        ? storedState.customIntervieweeDraft
+        : emptyCustomIntervieweeDraft,
+    };
   } catch {
-    return emptyState;
+    return emptyStoredSetupState;
   }
+}
+
+function getBrowserSetupSnapshot() {
+  try {
+    return window.sessionStorage.getItem(setupStorageKey) ?? memorySetupSnapshot;
+  } catch {
+    return memorySetupSnapshot;
+  }
+}
+
+function getServerSetupSnapshot() {
+  return emptySetupSnapshot;
+}
+
+function subscribeToSetupState(listener: () => void) {
+  setupListeners.add(listener);
+  return () => setupListeners.delete(listener);
+}
+
+function writeSetupState(state: StoredSetupState) {
+  memorySetupSnapshot = JSON.stringify(state);
+
+  try {
+    window.sessionStorage.setItem(setupStorageKey, memorySetupSnapshot);
+  } catch {
+    // The setup still works in memory when browser storage is unavailable.
+  }
+
+  setupListeners.forEach((listener) => listener());
 }
 
 type SetupState = {
@@ -76,32 +136,41 @@ type SetupState = {
   setTopicDraft: (draft: TopicDraft) => void;
   selectedIntervieweeId: string | null;
   setSelectedIntervieweeId: (intervieweeId: string | null) => void;
+  customIntervieweeDraft: CustomIntervieweeDraft;
+  setCustomIntervieweeDraft: (draft: CustomIntervieweeDraft) => void;
 };
 
 const SetupStateContext = createContext<SetupState | null>(null);
 
 export function SetupStateProvider({ children }: { children: ReactNode }) {
-  const [setupState, setSetupState] = useState<StoredSetupState>(readStoredSetupState);
-  const { topicDraft, selectedIntervieweeId } = setupState;
+  const setupSnapshot = useSyncExternalStore(
+    subscribeToSetupState,
+    getBrowserSetupSnapshot,
+    getServerSetupSnapshot,
+  );
+  const setupState = useMemo(() => parseSetupSnapshot(setupSnapshot), [setupSnapshot]);
+  const { topicDraft, selectedIntervieweeId, customIntervieweeDraft } = setupState;
 
   const setTopicDraft = useCallback((draft: TopicDraft) => {
-    setSetupState((currentState) => ({ ...currentState, topicDraft: draft }));
+    writeSetupState({
+      ...parseSetupSnapshot(getBrowserSetupSnapshot()),
+      topicDraft: draft,
+    });
   }, []);
 
   const setSelectedIntervieweeId = useCallback((intervieweeId: string | null) => {
-    setSetupState((currentState) => ({
-      ...currentState,
+    writeSetupState({
+      ...parseSetupSnapshot(getBrowserSetupSnapshot()),
       selectedIntervieweeId: intervieweeId,
-    }));
+    });
   }, []);
 
-  useEffect(() => {
-    try {
-      window.sessionStorage.setItem(setupStorageKey, JSON.stringify(setupState));
-    } catch {
-      // The setup still works in memory when browser storage is unavailable.
-    }
-  }, [setupState]);
+  const setCustomIntervieweeDraft = useCallback((draft: CustomIntervieweeDraft) => {
+    writeSetupState({
+      ...parseSetupSnapshot(getBrowserSetupSnapshot()),
+      customIntervieweeDraft: draft,
+    });
+  }, []);
 
   const value = useMemo(
     () => ({
@@ -109,8 +178,17 @@ export function SetupStateProvider({ children }: { children: ReactNode }) {
       setTopicDraft,
       selectedIntervieweeId,
       setSelectedIntervieweeId,
+      customIntervieweeDraft,
+      setCustomIntervieweeDraft,
     }),
-    [selectedIntervieweeId, setSelectedIntervieweeId, setTopicDraft, topicDraft],
+    [
+      customIntervieweeDraft,
+      selectedIntervieweeId,
+      setCustomIntervieweeDraft,
+      setSelectedIntervieweeId,
+      setTopicDraft,
+      topicDraft,
+    ],
   );
 
   return (
